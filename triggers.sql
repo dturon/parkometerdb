@@ -14,9 +14,9 @@ BEGIN
     END IF;
 
     -- check if last change is more then 15s
-    IF _last_change IS NULL OR last_change +'15s'::interval > now() THEN
-        RAISE DEBUG 'found car_id: %, parked: %, updating to parked: %', _car_id, _parked, !_parked;       
-        UPDATE hub_parking SET parked = !parked, last_change = b.ts WHERE car_id = _car_id;
+    IF _last_change IS NULL OR _last_change +'15s'::interval < now() THEN
+        RAISE DEBUG 'found car_id: %, parked: %, updating to parked: %', _car_id, _parked, NOT _parked;       
+        UPDATE hub_parking SET parked = NOT parked, last_change = b.ts WHERE car_id = _car_id;
     END IF;
 
 END;    
